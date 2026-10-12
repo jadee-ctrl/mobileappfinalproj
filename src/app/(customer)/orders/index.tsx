@@ -1,3 +1,4 @@
+
 import React, { useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
@@ -7,9 +8,8 @@ import { ScreenContainer, EmptyState, Card } from "../../../components/Basics";
 import { OrderCard } from "../../../components/OrderCard";
 import { ChipGroup } from "../../../components/ChipGroup";
 import { colors, fontSize, spacing } from "../../../constants/theme";
-import { OrderStatus } from "../../../types";
 
-const FILTERS = ["All", "Active", "Delivered", "Cancelled"];
+const FILTERS = ["All", "Active", "Completed", "Cancelled"];
 
 export default function CustomerOrdersScreen() {
   const { user } = useAuth();
@@ -20,10 +20,15 @@ export default function CustomerOrdersScreen() {
 
   const filtered = useMemo(() => {
     if (filter === "All") return orders;
-    if (filter === "Delivered")
+
+    if (filter === "Completed") {
       return orders.filter((o) => o.status === "delivered");
-    if (filter === "Cancelled")
+    }
+
+    if (filter === "Cancelled") {
       return orders.filter((o) => o.status === "cancelled");
+    }
+
     return orders.filter(
       (o) => o.status !== "delivered" && o.status !== "cancelled"
     );
@@ -32,6 +37,7 @@ export default function CustomerOrdersScreen() {
   return (
     <ScreenContainer>
       <Text style={styles.title}>My Orders</Text>
+
       <View style={{ marginBottom: spacing.lg }}>
         <ChipGroup
           label=""
